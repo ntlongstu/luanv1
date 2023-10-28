@@ -14,6 +14,8 @@ class AdminSupplierController extends Controller
 {
 	public function index()
 	{
+
+		// add
 		$supplieres = Supplier::get();
 		$viewData = [
 			'supplieres' => $supplieres
