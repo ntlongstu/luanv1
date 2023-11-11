@@ -31,7 +31,8 @@
                                     <th>Hành động</th>
                                 </tr>
                                 @if ($categories)
-                                    @foreach($categories as $key => $category)
+                                    @foreach($categories as $key => $category) 
+                                    {{-- tạo ra nhiều dòng --}}
                                         <tr>
                                             <td style="vertical-align: middle">{{ (($categories->currentPage() - 1) * $categories->perPage()) + ( $key + 1)  }}</td>
                                             <td style="vertical-align: middle">{{ $category->c_name }}</td>

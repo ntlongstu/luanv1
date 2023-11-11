@@ -35,7 +35,7 @@
     <div class="wrapper">
         <header class="main-header" >
             <!-- Logo -->
-            <a href="/" class="logo" style="background-color: #0000FF">
+            <a href="{{ route('admin.statistical') }}" class="logo" style="background-color: #0000FF">
                 <!-- mini logo for sidebar mini 50x50 pixels -->
                 <span class="logo-mini"><b>N</b>.Ân</span>
                 <!-- logo for regular state and mobile devices -->
@@ -403,7 +403,6 @@
                 let price = currencyFormat((money.val() * qty) + (money2.val() * qty2) + (money3.val() * qty3));
                 $("#total_money").val(price)
             })
-
 
             function currencyFormat(num) {
                 return (

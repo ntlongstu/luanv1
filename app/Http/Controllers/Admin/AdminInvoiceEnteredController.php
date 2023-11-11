@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\AdminInvoiceEnteredStore;
 use App\Models\Category;
 use App\Models\InvoiceEntered;
 use App\Models\Menu;
@@ -11,6 +12,7 @@ use App\Models\Import_histories;
 use App\Models\Supplier;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 use SebastianBergmann\Environment\Console;
 //Hóa đơn
 class AdminInvoiceEnteredController extends Controller
@@ -43,13 +45,13 @@ class AdminInvoiceEnteredController extends Controller
         return view('admin.invoice_entered.create', compact('suppliere','products'));
     }
 
-    public function store(Request $request)
+    public function store(AdminInvoiceEnteredStore $request)
     {
         // $data               = $request->except('_token');
         // $data['created_at'] =  Carbon::now();
         // $data['ie_total_money'] = $request->ie_number * $request->ie_money;
         // InvoiceEntered::insert($data);
-        
+
         $data1 = new InvoiceEntered();
         $data1['created_at'] =  Carbon::now();
         $tongtien = $request->ie_number * $request->ie_money;
@@ -63,16 +65,13 @@ class AdminInvoiceEnteredController extends Controller
         $data1['ie_money'] = $request->ie_money;
         $data1['ie_status'] = 0;
         $data1['ie_number'] = $request->ie_number;
-        $data1['NgaySX'] = $request->nsx;
-        $data1['Hansudung'] = $request->hsd;
+
         $thanhtoan = $request->ie_the_advance;
         if($thanhtoan>=$tongtien){
             $data1['ie_the_advance'] = $tongtien;
-            $sodu = $thanhtoan-$tongtien;
         }
         if($thanhtoan<$tongtien){
             $data1['ie_the_advance'] = $thanhtoan;
-            $sodu = 0;
         }
         
         $data1->save();
@@ -82,70 +81,6 @@ class AdminInvoiceEnteredController extends Controller
         $history['thanhtoan'] = $data1->ie_the_advance;
         $history->save();
 
-        $checkProduct2 = $request->ie_product_id2;
-        $checkProduct3 = $request->ie_product_id3;
-
-
-        if($checkProduct2 != 'none'){
-            $data2 = new InvoiceEntered();
-            $data2['created_at'] =  Carbon::now();
-            $tongtien = $request->ie_number2 * $request->ie_money2;
-            $data2['ie_total_money'] = $tongtien;
-            $data2['ie_suppliere'] = $request->ie_suppliere;
-            $data2['ie_product_id'] = $request->ie_product_id2;
-            $products2 = Product::find($request->ie_product_id2);
-            $products2['pro_number_import'] = $products2->pro_number_import + $request->ie_number2;
-            $products2['pro_number'] = $products2->pro_number + $request->ie_number2;
-            $data2['ie_number_sold'] = 0;
-            $data2['ie_money'] = $request->ie_money2;
-            $data2['ie_status'] = 0;
-            $data2['ie_number'] = $request->ie_number2;
-            $data2['NgaySX'] = $request->nsx2;
-            $data2['Hansudung'] = $request->hsd2;
-            if($sodu>=$tongtien){
-                $data2['ie_the_advance'] = $tongtien;
-                $sodu2 = $thanhtoan-$tongtien;
-            }
-            if($sodu<$tongtien){
-                $data2['ie_the_advance'] = $sodu;
-                $sodu2 = 0;
-            }
-            $data2->save();
-            $products2->save();
-            $history2 = new Import_histories();
-            $history2['id_import'] = $data2->id;
-            $history['thanhtoan'] = $data2->ie_the_advance;
-            $history2->save();
-            if($checkProduct3 != 'none'){
-                $data3 = new InvoiceEntered();
-                $data3['created_at'] =  Carbon::now();
-                $tongtien = $request->ie_number3 * $request->ie_money3;
-                $data3['ie_total_money'] = $tongtien;
-                $data3['ie_suppliere'] = $request->ie_suppliere;
-                $data3['ie_product_id'] = $request->ie_product_id3;
-                $products3 = Product::find($request->ie_product_id3);
-                $products3['pro_number_import'] = $products3->pro_number_import + $request->ie_number3;
-                $products3['pro_number'] = $products3->pro_number + $request->ie_number3;
-                $data3['ie_number_sold'] = 0;
-                $data3['ie_money'] = $request->ie_money3;
-                $data3['ie_status'] = 0;
-                $data3['ie_number'] = $request->ie_number3;
-                $data3['NgaySX'] = $request->nsx3;
-                $data3['Hansudung'] = $request->hsd3;
-                if($sodu2>=$tongtien){
-                    $data3['ie_the_advance'] = $tongtien;
-                }
-                if($sodu2<$tongtien){
-                    $data3['ie_the_advance'] = $sodu2;
-                }
-                $data3->save();
-                $products3->save();
-                $history3 = new Import_histories();
-                $history3['id_import'] = $data3->id;
-                $history3['thanhtoan'] = $data3->ie_the_advance;
-                $history3->save();
-            }
-        }
        
         return redirect()->back()->with('success', 'Thêm hành công dữ liệu');
     }

@@ -32,6 +32,7 @@ class AppServiceProvider extends ServiceProvider
     {
         Schema::defaultStringLength(191);
         $this->bootDBLogger();
+        app()->setLocale('vi');
         try{
             $categories = Category::with('children:id,c_name,c_slug,c_parent_id')
                 ->where('c_parent_id',0)

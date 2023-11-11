@@ -19,15 +19,15 @@ class AdminProductController extends Controller
 {
 	public function index(Request $request)
 	{
-		Cache::forget('HOME.PRODUCT_NEW');
+		Cache::forget('HOME.PRODUCT_NEW');//foget xóa cache đi
 		Cache::forget('HOME.PRODUCT_HOT');
-		$sumNumber = Product::sum('pro_number');
-		$products  = Product::with('category:id,c_name');
-		if ($id = $request->id) $products->where('id', $id);
-		if ($name = $request->name) $products->where('pro_name', 'like', '%' . $name . '%');
-		if ($category = $request->category) $products->where('pro_category_id', $category);
+		$sumNumber = Product::sum('pro_number');//lấy tổng số sp còn lại
+		$products  = Product::with('category:id,c_name');//lấy quan hệ các cột id name cate
+		if ($id = $request->id) $products->where('id', $id);// tìm kiểm theo id
+		if ($name = $request->name) $products->where('pro_name', 'like', '%' . $name . '%');// tìm kiểm theo tên
+		if ($category = $request->category) $products->where('pro_category_id', $category);// tìm kiểm theo danh mục
 
-		$products   = $products->orderByDesc('id')->paginate(10);
+		$products   = $products->orderByDesc('id')->paginate(10);//phân trang 10
 		$categories = Category::all();
 		$viewData   = [
 			'products'   => $products,
@@ -39,7 +39,7 @@ class AdminProductController extends Controller
 		return view('admin.product.index', $viewData);
 	}
 
-	public function create()
+	public function create()//thêm mới sp
 	{
 		$categories   = Category::all();
 		$attributeOld = [];
@@ -49,7 +49,7 @@ class AdminProductController extends Controller
 		return view('admin.product.create', compact('categories', 'attributeOld', 'attributes'));
 	}
 
-	public function store(AdminRequestProduct $request)
+	public function store(AdminRequestProduct $request)//trang sửa lý trong thêm mới
 	{
 		$data                      = $request->except('_token', 'pro_avatar', 'attribute', 'keywords', 'file', 'pro_sale');
 		$data['pro_slug']          = Str::slug($request->pro_name);
@@ -79,7 +79,7 @@ class AdminProductController extends Controller
 		return redirect()->back()->with('success', 'Thêm hành công dữ liệu');
 	}
 
-	public function edit($id)
+	public function edit($id)//trang sửa
 	{
 		$categories     = Category::all();
 		$product        = Product::findOrFail($id);
@@ -114,17 +114,17 @@ class AdminProductController extends Controller
 
 	}
 
-	public function update(AdminRequestProduct $request, $id)
+	public function update(AdminRequestProduct $request, $id)//trang sử ký
 	{
 		$product                   = Product::find($id);
 		$data                      = $request->except('_token', 'pro_avatar', 'attribute', 'keywords', 'file', 'pro_sale','add_number');
 		$data['pro_slug']          = Str::slug($request->pro_name);
 		$data['updated_at']        = Carbon::now();
-		if ($request->pro_sale) {
+		if ($request->pro_sale) {//có pro sale"phần trăm giảm"
 			$data['pro_sale'] = $request->pro_sale;
 		}
 
-		if ($request->pro_avatar) {
+		if ($request->pro_avatar) {//update hình ảnh
 			$image = upload_image('pro_avatar');
 			if ($image['code'] == 1)
 				$data['pro_avatar'] = $image['name'];

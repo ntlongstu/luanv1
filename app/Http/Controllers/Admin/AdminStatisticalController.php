@@ -14,20 +14,63 @@ class AdminStatisticalController extends Controller
 {
 	public function index()
     {
-    	if (!check_admin()) return redirect()->route('get.admin.index');
+    	if (!check_admin()) return redirect()->route('get.admin.index');//check phân quyền admin admin đc xem doanh thu,nv ko được xem doanh thu
 
-        //Tổng hđơn hàng
-        $totalTransactions = \DB::table('transactions')->select('id')->count();
+        $from = request()->get('from');
+        $to = request()->get('to');
+
+        //Tổng số đơn hàng
+        $totalTransactions = \DB::table('transactions')
+        ->where(function ($query) use ($to, $from) {
+            if (!empty($from)) {
+                $query->where('created_at', '>=', $from);
+            }
+
+            if (!empty($to)) {
+                $query->where('created_at', '<=', $to);
+            }
+        })
+        ->select('id')->count();//đếm số dòng trong bang transaction
 
         //Tổng thành viên
-        $totalUsers = \DB::table('users')->select('id')->count();
+        $totalUsers = \DB::table('users')->select('id')
+        ->where(function ($query) use ($to, $from) {
+            if (!empty($from)) {
+                $query->where('created_at', '>=', $from);
+            }
+
+            if (!empty($to)) {
+                $query->where('created_at', '<=', $to);
+            }
+        })
+        ->count();//đếm số dòng trong bang user
 
         // Tông sản phẩm
-        $totalProducts = \DB::table('products')->select('id')->count();
+        $totalProducts = \DB::table('products')->select('id')
+        ->where(function ($query) use ($to, $from) {
+            if (!empty($from)) {
+                $query->where('created_at', '>=', $from);
+            }
+
+            if (!empty($to)) {
+                $query->where('created_at', '<=', $to);
+            }
+        })
+        ->count();//đếm số dòng trong bang produst
 
 
         // Tông đánh giá
-        $totalRatings = \DB::table('ratings')->select('id')->count();
+        $totalRatings = \DB::table('ratings')->select('id')
+        ->where(function ($query) use ($to, $from) {
+            if (!empty($from)) {
+                $query->where('created_at', '>=', $from);
+            }
+
+            if (!empty($to)) {
+                $query->where('created_at', '<=', $to);
+            }
+        })
+        ->count();
 
         // Danh sách đơn hàng mới
         $transactions = Transaction::orderByDesc('id')
@@ -56,24 +99,8 @@ class AdminStatisticalController extends Controller
 			->sum('tst_total_money');
 
 
-        // Top sản phẩm xem nhiều
-        $topViewProducts = Product::orderByDesc('pro_view')
-            ->limit(10)
-            ->get();
-
-        // Top sản phẩm mua nhiều
-        $topPayProducts = Product::orderByDesc('pro_pay')
-            ->limit(10)
-            ->get();
-
-        // Top mua nhiều trong tháng
-		$topProductBuyMonth = Order::with('product:id,pro_name,pro_avatar')->whereMonth('created_at',date('m'))
-			->select(\DB::raw('sum(od_qty) as quantity'))
-			->addSelect('od_product_id','od_price')
-			->groupBy('od_product_id')
-			->limit(20)
-			->orderByDesc('quantity')
-			->get();
+       
+       
 
         // Tiep nhan
         $transactionDefault = Transaction::where('tst_status',1)->select('id')->count();
@@ -150,9 +177,6 @@ class AdminStatisticalController extends Controller
             'totalProducts'              => $totalProducts,
             'totalRatings'               => $totalRatings,
             'transactions'               => $transactions,
-            'topViewProducts'            => $topViewProducts,
-            'topPayProducts'             => $topPayProducts,
-			'topProductBuyMonth'		 => $topProductBuyMonth,
             'statusTransaction'          => json_encode($statusTransaction),
             'listDay'                    => json_encode($listDay),
             'arrRevenueTransactionMonth' => json_encode($arrRevenueTransactionMonth),

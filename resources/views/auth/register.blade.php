@@ -11,10 +11,7 @@
                 <li>
                     <a itemprop="url" href="/" title="Home"><span itemprop="title">Trang chủ</span></a>
                 </li>
-                <li>
-                    <a itemprop="url" href="#" title="Đồng hồ chính hãng"><span itemprop="title">Account</span></a>
-                </li>
-
+                
                 <li>
                     <a itemprop="url" href="#" title="Đăng ký"><span itemprop="title">Đăng ký</span></a>
                 </li>
@@ -43,6 +40,13 @@
                     <input name="password" id="phone" type="password" placeholder="********" class="form-control">
                     @if ($errors->first('password'))
                         <span class="text-danger">{{ $errors->first('password') }}</span>
+                    @endif
+                </div>
+                <div class="form-group">
+                    <label for="phone">Nhập lại password <span class="cRed">(*)</span></label>
+                    <input name="password_confirmation" id="phone" type="password" placeholder="********" class="form-control">
+                    @if ($errors->first('password'))
+                        <span class="text-danger">{{ $errors->first('password_confirmation') }}</span>
                     @endif
                 </div>
                 <div class="form-group">

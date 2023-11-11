@@ -34,7 +34,7 @@ return [
     | Supported: "session", "token"
     |
     */
-
+//khai báo guard cho login
     'guards' => [
         'web' => [
             'driver' => 'session',

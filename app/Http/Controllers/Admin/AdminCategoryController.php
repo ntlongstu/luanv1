@@ -12,7 +12,7 @@ class AdminCategoryController extends AdminController
 {
     public function index()
     {
-        $categories = Category::paginate(10);
+        $categories = Category::paginate(10);// phân trang mỗi trang 10 cái
 
         $viewData = [
             'categories' => $categories
@@ -45,7 +45,8 @@ class AdminCategoryController extends AdminController
     public function edit($id)
     {
         $category = Category::find($id);
-        $categories = $this->getCategoriesSort();
+        $categories = $this->getCategoriesSortForEdit($id);
+
         return view('admin.category.update', compact('category','categories'));
     }
 
@@ -95,6 +96,19 @@ class AdminCategoryController extends AdminController
     protected function getCategoriesSort()
     {
         $categories = Category::where('c_status', Category::STATUS_ACTIVE)
+            ->select('id', 'c_parent_id', 'c_name')->get();
+
+        $listCategoriesSort = [];
+        Category::recursive($categories, $parent = 0, $level = 1, $listCategoriesSort);
+        return $listCategoriesSort;
+    }
+
+    
+    protected function getCategoriesSortForEdit($categoryId)
+    {
+        $categories = Category::where('c_status', Category::STATUS_ACTIVE)
+            ->where('id', '!=', $categoryId)
+            ->where('c_parent_id', '!=', $categoryId)
             ->select('id', 'c_parent_id', 'c_name')->get();
 
         $listCategoriesSort = [];

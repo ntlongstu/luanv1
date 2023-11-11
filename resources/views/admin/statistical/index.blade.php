@@ -8,6 +8,21 @@
         </ol>
     </section>
     <section class="content">
+
+        <div class="box">
+            <div class="box-header with-border">
+               <div class="box-title">
+                    <form class="form-inline">
+                        <label for="from">Thời gian từ: </label>
+                        <input type="date" class="form-control" value="{{ Request::get('from') }}" name="from">
+                        <label for="to">Đến: </label>
+                        <input type="date" class="form-control" value="{{ Request::get('to') }}" name="to">
+                        <button class="form-control btn-primary" type="submit">Xem</button>
+                    </form>
+               </div>
+            </div>
+        </div>
+
         <!-- Info boxes -->
         <div class="row">
             <div class="col-md-3 col-sm-6 col-xs-12">
@@ -117,11 +132,9 @@
 
     <!-- /.row -->
     <div class="row" style="margin-bottom: 15px;">
-        <div class="col-sm-8">
+        <div class="col-sm-12">
             <figure class="highcharts-figure">
                 <div id="container2" data-list-day="{{ $listDay }}" data-money-default={{ $arrRevenueTransactionMonthDefault }} data-money={{ $arrRevenueTransactionMonth }}>
-
-                    
                 </div>
             </figure>
         </div>
@@ -134,7 +147,7 @@
     <!-- Main row -->
     <div class="row">
         <!-- Left col -->
-        <div class="col-md-8">
+        <div class="col-md-12">
             <!-- TABLE: LATEST ORDERS -->
             <div class="box box-info">
                 <div class="box-header with-border">
@@ -192,136 +205,16 @@
                     <!-- /.table-responsive -->
                 </div>
                 <!-- /.box-body -->
-                <div class="box-footer clearfix">
-                    <a href="javascript:void(0)" class="btn btn-sm btn-info btn-flat pull-right">Danh sách đơn hàng</a>
-                </div>
+            
                 <!-- /.box-footer -->
             </div>
             <!-- /.box -->
             <!-- TABLE: LATEST ORDERS -->
-            <div class="box box-info">
-                <div class="box-header with-border">
-                    <h3 class="box-title">Top sản phẩm bán trong tháng</h3>
-                    <div class="box-tools pull-right">
-                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
-                        </button>
-                        <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
-                    </div>
-                </div>
-                <!-- /.box-header -->
-                <div class="box-body">
-                    <div class="table-responsive">
-                        <table class="table no-margin">
-                            <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Name</th>
-                                <th>Image</th>
-                                <th>Qty</th>
-                                <th>Price</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-
-                            @foreach($topProductBuyMonth as $product)
-                                <tr>
-                                    <td>{{ $product->od_product_id }}</td>
-                                    <td>{{ $product->product->pro_name ?? "[N\A]" }}</td>
-                                    <td>
-                                        <img src="{{ pare_url_file($product->product->pro_avatar ?? "[N\A]") }}" alt="" style="width: 80px;height: 80px;">
-                                    </td>
-                                    <td>{{ $product->quantity }}</td>
-                                    <td>{{ number_format($product->od_price,0,',','.') }} VNĐ</td>
-                                </tr>
-                            @endforeach
-                            </tbody>
-                        </table>
-                    </div>
-                    <!-- /.table-responsive -->
-                </div>
-                <!-- /.box-body -->
-                <div class="box-footer clearfix">
-                    <a href="{{ route('admin.product.index') }}" class="btn btn-sm btn-info btn-flat pull-right">Danh sách sản phẩm</a>
-                </div>
-                <!-- /.box-footer -->
-            </div>
+            
             <!-- /.box -->
         </div>
         <!-- /.col -->
-        <div class="col-md-4">
-            <!-- PRODUCT LIST -->
-            <div class="box box-primary">
-                <div class="box-header with-border">
-                    <h3 class="box-title">Top sản phẩm bán chạy</h3>
-                    <div class="box-tools pull-right">
-                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
-                        </button>
-                        <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
-                    </div>
-                </div>
-                <!-- /.box-header -->
-                <div class="box-body">
-                    <ul class="products-list product-list-in-box">
-                        @foreach($topPayProducts as $item)
-                        <li class="item">
-                            <div class="product-img">
-                                <img src="{{ pare_url_file($item->pro_avatar) }}" alt="Product Image">
-                            </div>
-                            <div class="product-info">
-                                <a href="javascript:void(0)" class="product-title">
-                                    {{  $item->pro_pay }} Lượt mua
-                                <span class="label label-warning pull-right">{{ number_format($item->pro_price,0,',','.') }} đ</span>
-                                </a>
-                                <span class="product-description">{{ $item->pro_name }}</span>
-                            </div>
-                        </li>
-                        @endforeach
-                    </ul>
-                </div>
-                <!-- /.box-body -->
-                <div class="box-footer text-center">
-                    <a href="javascript:void(0)" class="uppercase">View All Products</a>
-                </div>
-                <!-- /.box-footer -->
-            </div>
-            <!-- /.box -->
-            <!-- PRODUCT LIST -->
-            <div class="box box-primary">
-                <div class="box-header with-border">
-                    <h3 class="box-title">Top sản phẩm xem nhiều</h3>
-                    <div class="box-tools pull-right">
-                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
-                        </button>
-                        <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
-                    </div>
-                </div>
-                <!-- /.box-header -->
-                <div class="box-body">
-                    <ul class="products-list product-list-in-box">
-                        @foreach($topViewProducts as $item)
-                        <li class="item">
-                            <div class="product-img">
-                                <img src="{{ pare_url_file($item->pro_avatar) }}" alt="Product Image">
-                            </div>
-                            <div class="product-info">
-                                <a href="javascript:void(0)" class="product-title">
-                                    {{  $item->pro_view }} <i class="fa fa-eye"></i>
-                                <span class="label label-warning pull-right">{{ number_format($item->pro_price,0,',','.') }} đ</span>
-                                </a>
-                                <span class="product-description">{{ $item->pro_name }}</span>
-                            </div>
-                        </li>
-                        @endforeach
-                    </ul>
-                </div>
-                <!-- /.box-body -->
-                <div class="box-footer text-center">
-                    <a href="javascript:void(0)" class="uppercase">View All Products</a>
-                </div>
-                <!-- /.box-footer -->
-            </div>
-            <!-- /.box -->
-        </div>
+        
         <!-- /.col -->
     </div>
     <!-- /.row -->
@@ -329,6 +222,11 @@
 @stop
 
 @section('script')
+<style>
+    .highcharts-background {
+        fill: rgb(255 255 255) !important;
+    }
+</style>
 <link rel="stylesheet" href="https://code.highcharts.com/css/highcharts.css">
     <script src="https://code.highcharts.com/highcharts.js"></script>
     {{-- <script src="https://code.highcharts.com/modules/exporting.js"></script> --}}
@@ -347,28 +245,7 @@
         let listMoneyMonthDefault = $("#container2").attr('data-money-default');
         listMoneyMonthDefault = JSON.parse(listMoneyMonthDefault);
 
-        Highcharts.chart('container', {
-
-            chart: {
-                styledMode: true
-            },
-
-            title: {
-                text: 'Thống kê trạng thái đơn hàng'
-            },
-
-            xAxis: {
-                categories: ['Jan', 'Feb', 'Mar', 'Apr']
-            },
-
-            series: [{
-                type: 'pie',
-                allowPointSelect: true,
-                keys: ['name', 'y', 'selected', 'sliced'],
-                data: dataTransaction,
-                showInLegend: true
-            }]
-        });
+ 
 
         Highcharts.chart('container2', {
             chart: {

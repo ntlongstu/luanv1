@@ -38,7 +38,7 @@
                         <table class="table table-bordered">
                             <tbody>
                                 <tr>
-                                    <th style="width: 10px">STT</th>
+                                    <th style="width: 10px">ID</th>
                                     <th>Tên</th>
                                     <th>Danh mục</th>
                                     <th>Ảnh</th>
@@ -53,7 +53,7 @@
                             @if (isset($products))
                                     @foreach($products as $key => $product)
                                         <tr>
-                                            <td style="vertical-align: middle">{{ (($products->currentPage() - 1) * $products->perPage()) + ( $key + 1)  }}</td>
+                                            <td style="vertical-align: middle">{{  $product->id }}</td>
                                             <td style="vertical-align: middle">
                                                 <a href="{{ route('get.product.detail',$product->pro_slug . '-'.$product->id ) }}" target="_blank">{{ $product->pro_name }}</a>
                                             </td>

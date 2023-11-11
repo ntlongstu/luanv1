@@ -28,8 +28,7 @@ class RequestRegister extends FormRequest
             'address'=>'nullable|min:20',
             'name'      => 'required|min:10|max:50',
             'phone'     => 'required|max:10|min:10|unique:users,phone',
-            'password'  => 'required|min:8',
-
+            'password'  => 'required|min:8|confirmed'//confirmed kiểm tra pass có trùng khớp ko 
         ];
     }
 
@@ -46,7 +45,8 @@ class RequestRegister extends FormRequest
             'phone.max'              => 'Số điện thoại phải có 10 ký tự',
             'phone.min'              => 'Số điện thoại phải có 10 ký tự',
             'password.required'      => 'Dữ liệu không được để trống',
-            'password.min'=>'Phải lớn hơn 8 ký tự'
+            'password.min'=>'Phải lớn hơn 8 ký tự',
+            'password.confirmed'=>'Nhập lại mật khẩu không trùng khớp'
         ];
     }
 }
